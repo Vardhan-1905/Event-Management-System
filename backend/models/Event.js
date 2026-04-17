@@ -6,6 +6,7 @@ const EventSchema = new mongoose.Schema({
   time: String,
   venue: String,
   code: String,
+  organizer: String,
   attending: { type: Number, default: 0 },
   notAttending: { type: Number, default: 0 }
 });

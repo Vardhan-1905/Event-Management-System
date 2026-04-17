@@ -12,7 +12,9 @@ export default function Login() {
 
   const login = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/login", data);
+      const res = await axios.post("http://localhost:5001/api/login", data);
+
+      localStorage.setItem("email", data.email);
 
       if (res.data.role === "organiser") {
         nav("/organiser");

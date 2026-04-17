@@ -10,7 +10,7 @@ export default function Participant() {
 
   const fetchEvent = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/event/${code}`);
+      const res = await axios.get(`http://localhost:5001/api/event/${code}`);
       setEvent(res.data);
     } catch {
       alert("Invalid Code. Please ask the organiser for the correct code.");
@@ -19,7 +19,7 @@ export default function Participant() {
 
   const submitRsvp = async (status) => {
     try {
-      await axios.post("http://localhost:5000/api/event/rsvp", { code, status });
+      await axios.post("http://localhost:5001/api/event/rsvp", { code, status });
       setHasRSVPed(true);
     } catch {
       alert("Failed to submit RSVP");

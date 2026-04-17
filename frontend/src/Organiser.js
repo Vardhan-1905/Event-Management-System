@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:5000");
+const socket = io.connect("http://localhost:5001");
 
 export default function Organiser() {
   const [form, setForm] = useState({
@@ -16,15 +16,32 @@ export default function Organiser() {
   // RSVP Analytics state
   const [rsvp, setRsvp] = useState({ attending: 0, notAttending: 0 });
 
+  // My Events state
+  const [events, setEvents] = useState([]);
+
   const createEvent = async () => {
-    const res = await axios.post("http://localhost:5000/api/create-event", form);
+    const organizer = localStorage.getItem("email");
+    const res = await axios.post("http://localhost:5001/api/create-event", { ...form, organizer });
     setCode(res.data.code);
 
     // Connect to the socket room to listen for live RSVP updates
     socket.emit("join_event", res.data.code);
+
+    // Refresh events
+    fetchEvents();
+  };
+
+  const fetchEvents = async () => {
+    const email = localStorage.getItem("email");
+    if (email) {
+      const res = await axios.get(`http://localhost:5001/api/my-events/${email}`);
+      setEvents(res.data);
+    }
   };
 
   useEffect(() => {
+    fetchEvents();
+
     // Listen for live RSVP button clicks from participants
     socket.on("update_rsvp", (data) => setRsvp(data));
 
@@ -92,6 +109,28 @@ export default function Organiser() {
           )}
 
         </div>
+
+        {/* My Events Section */}
+        <div style={{ padding: "40px" }}>
+          <h3 style={{ borderBottom: "2px solid #eee", paddingBottom: "10px", color: "#333", fontSize: "22px" }}>My Events</h3>
+          {events.length === 0 ? (
+            <p>No events created yet.</p>
+          ) : (
+            <div style={{ display: "grid", gap: "20px", marginTop: "20px" }}>
+              {events.map(event => (
+                <div key={event._id} style={{ background: "#f8fbff", border: "1px solid #2193b0", borderRadius: "10px", padding: "20px" }}>
+                  <h4>{event.title}</h4>
+                  <p>Date: {event.date} | Time: {event.time} | Venue: {event.venue}</p>
+                  <p>Code: {event.code}</p>
+                  <p>Attending Participants: {event.attending}</p>
+                  <p>Not Attending: {event.notAttending}</p>
+                  <p style={{ fontWeight: "700" }}>Total RSVPs: {event.attending + event.notAttending}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
       </div>
       <style>{`
         @keyframes fadeIn {
