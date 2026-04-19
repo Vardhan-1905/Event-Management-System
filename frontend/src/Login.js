@@ -16,7 +16,7 @@ export default function Login() {
 
       localStorage.setItem("email", data.email);
 
-      if (res.data.role === "organiser") {
+      if (res.data.role === "organizer") {
         nav("/organiser");
       } else {
         nav("/participant");

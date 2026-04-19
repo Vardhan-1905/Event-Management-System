@@ -1,6 +1,8 @@
 const express = require("express");
+const http = require("http");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const { Server } = require("socket.io");
 
 const app = express();
 app.use(cors());
@@ -14,6 +16,23 @@ mongoose.connect("mongodb://127.0.0.1:27017/eventDB")
 // Models
 const User = require("./models/User");
 const Event = require("./models/Event");
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
+io.on("connection", (socket) => {
+  console.log("Socket connected:", socket.id);
+
+  socket.on("join_event", (code) => {
+    socket.join(code);
+    console.log(`Socket ${socket.id} joined room ${code}`);
+  });
+});
 
 // REGISTER
 app.post("/api/register", async (req, res) => {
@@ -70,8 +89,8 @@ app.post("/api/event/rsvp", async (req, res) => {
   }
 
   await event.save();
+  io.to(code).emit("update_rsvp", { attending: event.attending, notAttending: event.notAttending });
   res.json({ msg: "RSVP submitted" });
 });
 
-// ✅ UPDATED HERE
-app.listen(5001, () => console.log("Server running on port 5001"));
+server.listen(5001, () => console.log("Server running on port 5001"));

@@ -1,5 +1,5 @@
 {
-  "name": "event-frontend",
+  "name": "event-management-system-frontend",
   "version": "1.0.0",
   "dependencies": {
     "axios": "^1.5.0",

@@ -12,7 +12,7 @@ export default function Register() {
 
   const register = async () => {
     try {
-      await axios.post("http://localhost:5000/api/register", data);
+      await axios.post("http://localhost:5001/api/register", data);
       alert("Registration Successful!");
       nav("/login");
     } catch {
@@ -38,6 +38,7 @@ export default function Register() {
         maxWidth: "380px",
         textAlign: "center"
       }}>
+        <p style={{ margin: "0 0 10px 0", color: "#11998e", fontSize: "14px", fontWeight: "700", letterSpacing: "1px" }}>Event Management System</p>
         <h2 style={{ margin: "0 0 25px 0", color: "#333", fontSize: "32px", fontWeight: "800" }}>Create Account ✨</h2>
 
         <div style={{ textAlign: "left", marginBottom: "15px" }}>
@@ -71,7 +72,7 @@ export default function Register() {
             onBlur={(e) => e.target.style.borderColor = "#e1e1e1"}
             onChange={e => setData({ ...data, role: e.target.value })}>
             <option value="participant">I am a Participant</option>
-            <option value="organiser">I am an Organiser</option>
+            <option value="organizer">I am an Organiser</option>
           </select>
         </div>
 
