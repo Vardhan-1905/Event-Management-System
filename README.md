@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Event-Management-System
 
 ## Setup
@@ -14,3 +15,6 @@
 
 - The backend expects MongoDB running locally at `mongodb://127.0.0.1:27017/eventDB`.
 - The frontend uses `http://localhost:5001` for API requests.
+=======
+# Event-Management-System
+>>>>>>> 62c0f83030f033e0b3c9fd3faa0236c2bfd5e772
